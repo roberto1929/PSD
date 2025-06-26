@@ -1,0 +1,50 @@
+% 1.Projete um filtro passa-faixa usando a janela de Hamming, a janela de Hanning e janela de Blackman que
+% satisfaça a especificação a seguir.
+%
+% M = 10, 100, 1000
+% • Ωc1 = 10 rad/s
+% • Ωc2 = 35 rad/s
+% • Ωs = 100 rad/s
+
+clear all; close all; clc;
+
+% Especificações
+Omega_c1 = 10;     % rad/s
+Omega_c2 = 35;     % rad/s
+Omega_s  = 100;    % rad/s
+
+% Laço para M = 10, 100, 1000
+for M = [10, 100, 1000]
+    
+    wc1 = Omega_c1 * 2 * pi / Omega_s;  % Normalização
+    wc2 = Omega_c2 * 2 * pi / Omega_s;
+    
+    n = -((M-1)/2):((M-1)/2);  % Vetor de amostras centrado em zero
+
+    % Resposta ao impulso do filtro ideal passa-faixa
+    h = ((sin(wc2.*n) - sin(wc1.*n)) ./ (pi.*n));
+    h((M+1)/2) = (wc2 - wc1)/pi;  
+
+    % Janelas
+    w_hamming = hamming(M)';
+    w_hanning = hanning(M)';
+    w_blackman = blackman(M)';
+
+    % Aplicação das janelas
+    h_hamm = h .* w_hamming;
+    h_hann = h .* w_hanning;
+    h_black = h .* w_blackman;
+
+    % Respostas em frequência
+    figure;
+    freqz(h_hamm, 1, 2048, Omega_s);
+    title(sprintf('Filtro Passa-Faixa - Janela de Hamming (M = %d)', M));
+
+    figure;
+    freqz(h_hann, 1, 2048, Omega_s);
+    title(sprintf('Filtro Passa-Faixa - Janela de Hanning (M = %d)', M));
+
+    figure;
+    freqz(h_black, 1, 2048, Omega_s);
+    title(sprintf('Filtro Passa-Faixa - Janela de Blackman (M = %d)', M));
+end
