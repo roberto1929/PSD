@@ -16,10 +16,10 @@ As = -20*log10(delta_s);
 epsilon = sqrt((10^(0.1*Ap))-1);
 Omega_r_linha = Omega_s / Omega_p;
 
-num = log10((10^(0.1 * As) - 1)/ epsilon^2);
-den = (2 * log10(Omega_r_linha));
-n = ceil(num/den);
+num = 
+n = ceil(log10((10^(0.1 * As) - 1) / epsilon^2) / (2 * log10(Omega_r_linha)));
 
+fprintf('Ordem do filtro Butterworth: n = %d\n', n);
 [b_a, a_a] = butter(n, Omega_p, 's');   
 
 fs = 1 / Ts;   
